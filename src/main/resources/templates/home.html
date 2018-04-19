@@ -13,5 +13,19 @@
 </form>
 <h1>Home</h1>
 <p>You are logged in now :)</p>
+
+
+<div th:if="${productCategories.size() != 0}">
+    <h2>Categories</h2>
+    <ul>
+        <li th:each="category : ${productCategories}">
+            <div th:object="${category}">
+                <p th:text="*{id}"></p>
+                <p th:text="*{name}"></p>
+            </div>
+
+        </li>
+    </ul>
+</div>
 </body>
 </html>
