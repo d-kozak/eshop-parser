@@ -1,6 +1,6 @@
 package io.dkozak.eobaly.dao
 
-import io.dkozak.eobaly.domain.ProductDetail
+import io.dkozak.eobaly.domain.ProductDetails
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface ProductDetailRepository : JpaRepository<ProductDetail, Long>
+interface ProductDetailRepository : JpaRepository<ProductDetails, Long>

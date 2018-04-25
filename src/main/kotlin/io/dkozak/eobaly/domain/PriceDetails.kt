@@ -3,29 +3,31 @@ package io.dkozak.eobaly.domain
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
-import javax.persistence.OneToMany
+import javax.persistence.ManyToOne
 
 @Entity
-class ProductCategory(name: String) {
+class PriceDetails {
 
-    @Id
     @GeneratedValue
+    @Id
     var id = 0
 
-    var name = ""
+    var amount = 0
 
-    @OneToMany(mappedBy = "category")
-    var products: List<Product> = emptyList()
+    var pricePerItem = 0.0
 
-    init {
-        this.name = name
+    @ManyToOne
+    lateinit var productDetails: ProductDetails
+
+    override fun toString(): String {
+        return "PriceDetails(id=$id, amount=$amount, pricePerItem=$pricePerItem)"
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as ProductCategory
+        other as PriceDetails
 
         if (id != other.id) return false
 
@@ -34,9 +36,5 @@ class ProductCategory(name: String) {
 
     override fun hashCode(): Int {
         return id
-    }
-
-    override fun toString(): String {
-        return "ProductCategory(id=$id, name='$name')"
     }
 }
