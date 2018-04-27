@@ -1,25 +1,24 @@
 package io.dkozak.eobaly.domain
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.OneToMany
+
+import javax.persistence.*
+import javax.validation.constraints.NotNull
 
 @Entity
-class ProductCategory(name: String) {
+class ProductCategory {
 
     @Id
     @GeneratedValue
     var id = 0
 
+    @Column(unique = true)
+    @NotNull
     var name = ""
+    var url = ""
 
     @OneToMany(mappedBy = "category")
     var products: List<Product> = emptyList()
 
-    init {
-        this.name = name
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

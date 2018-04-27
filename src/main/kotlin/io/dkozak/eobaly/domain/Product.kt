@@ -7,16 +7,15 @@ class Product {
     @Id
     @GeneratedValue
     var id = 0
-    var name = ""
-    @OneToMany(mappedBy = "product")
-    var details: List<ProductDetails> = emptyList()
+    var url = ""
+    var internalName: String = ""
+    var externalName: String = ""
 
-    @ManyToOne
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    var details: MutableList<ProductDetails> = mutableListOf()
+
+    @ManyToOne(fetch = FetchType.EAGER)
     lateinit var category: ProductCategory
-
-    override fun toString(): String {
-        return "Product(id=$id, name='$name')"
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -33,5 +32,7 @@ class Product {
         return id
     }
 
-
+    override fun toString(): String {
+        return "Product(id=$id, url='$url', internalName='$internalName', externalName='$externalName')"
+    }
 }

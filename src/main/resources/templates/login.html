@@ -7,13 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login page</title>
 
-    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../static/css/signin.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/signin.css" th:href="@{/css/signin.css}">
 </head>
 <body class="text-center">
-<p th:if="${loginError}" class="error" th:text="Wrong username or password"></p>
+<p th:if="${loginError}" class="error"> Wrong username or password</p>
 
-<p th:if="${logout}" th:text="You were logged out"></p>
+<p th:if="${logout}"> You were logged out</p>
 
 <form class="form-signin" th:action="@{/login}" method="post">
     <img src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" class="mb-4" width="72" height="72">
