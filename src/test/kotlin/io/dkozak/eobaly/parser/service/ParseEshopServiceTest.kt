@@ -1,5 +1,6 @@
 package io.dkozak.eobaly.parser.service
 
+import io.dkozak.eobaly.dao.ErrorLogRepository
 import io.dkozak.eobaly.dao.ProductCategoryRepository
 import io.dkozak.eobaly.dao.ProductDetailsRepository
 import io.dkozak.eobaly.dao.ProductRepository
@@ -33,10 +34,13 @@ class ParseEshopServiceTest {
     @Mock
     lateinit var productDetailsRepository: ProductDetailsRepository
 
+    @Mock
+    lateinit var errorLogRepository: ErrorLogRepository
+
     @Before
     fun init() {
         val parseEshopService = ParseShopService()
-        eobalyParsingTask = EobalyParsingTask(parseEshopService, productRepository, productDetailsRepository, productCategoryRepository)
+        eobalyParsingTask = EobalyParsingTask(parseEshopService, productRepository, productDetailsRepository, productCategoryRepository, errorLogRepository)
     }
 
     @Test

@@ -5,12 +5,11 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title th:text="${product.externalName}">Product</title>
     <link rel="stylesheet" href="../static/css/starter-template.css" th:href="@{/css/starter-template.css}">
     <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <title>Error log</title>
 </head>
-<body th:object="${product}">
+<body>
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Eobaly web scrapper</a>
     <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"/>
@@ -29,41 +28,29 @@
     <div class="row">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
             <div class="sidebar-sticky">
-                <h5 th:text="*{internalName}">Internal name</h5>
-                <a th:href="*{url}">Original product link</a>
                 <a th:href="@{/}">Go back</a>
             </div>
         </nav>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div>
-                <h1 th:text="*{externalName}">External name</h1>
-                <h3>Price chart</h3>
-                <div id="chart"></div>
+                <h1>Error logs</h1>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Data</th>
+                        <th scope="col">Type</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="log : ${errorLogs}" scope="row">
+                        <td th:text="${log.data}">data</td>
+                        <td th:text="${log.type}">type</td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </main>
     </div>
 </div>
-
-<script>
-    let internalName = "[[${product.internalName}]]";
-    let url = "http://" + window.location.host + "/product-price/" + internalName;
-    console.log(`loading from ${url}`);
-    fetch(url).then(
-        function (response) {
-            console.log(response);
-            return response.json();
-        }
-    ).then(function (data) {
-        let trace = {
-            x: [1, 2, 3, 4],
-            y: [10, 15, 13, 17],
-            type: 'scatter'
-        };
-        let data = [trace];
-        Plotly.newPlot('chart', data);
-        console.log('chard loaded...')
-    });
-</script>
-
 </body>
 </html>

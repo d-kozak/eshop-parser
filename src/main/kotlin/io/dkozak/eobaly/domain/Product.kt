@@ -1,6 +1,7 @@
 package io.dkozak.eobaly.domain
 
 import javax.persistence.*
+import javax.validation.constraints.NotNull
 
 @Entity
 class Product {
@@ -8,8 +9,12 @@ class Product {
     @GeneratedValue
     var id = 0
     var url = ""
+    @Column(unique = true)
+    @NotNull
     var internalName: String = ""
     var externalName: String = ""
+
+    var imgUrl = "https://www.eobaly.cz/pool/vzor/products/clim_thumb_xxl_103841_1.jpg"
 
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     var details: MutableList<ProductDetails> = mutableListOf()

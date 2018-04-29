@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface ProductCategoryRepository : JpaRepository<ProductCategory, Long> {
     fun findByName(name: String): ProductCategory?
+    fun findByUrl(url: String): ProductCategory?
+
 }

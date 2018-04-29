@@ -11,13 +11,11 @@
     <link rel="stylesheet" type="text/css" href="../static/css/signin.css" th:href="@{/css/signin.css}">
 </head>
 <body class="text-center">
-<p th:if="${loginError}" class="error"> Wrong username or password</p>
-
-<p th:if="${logout}"> You were logged out</p>
-
 <form class="form-signin" th:action="@{/login}" method="post">
     <img src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" class="mb-4" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+    <p th:if="${logout}" class="h6 mb-4 warning"> You were logged out</p>
+    <p th:if="${loginError}" class="h6 mb-4 error"> Wrong username or password</p>
     <label for="username" class="sr-only">Username:</label>
     <input type="text" class="form-control" placeholder="Username" id="username" name="username" autofocus="autofocus"
            required/>

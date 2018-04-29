@@ -12,6 +12,8 @@ import org.jboss.logging.Logger
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.springframework.stereotype.Service
+import java.util.logging.Level
+
 
 val MAIN_URL = "https://www.eobaly.cz"
 
@@ -32,7 +34,8 @@ class ParseShopService {
         val fullUrl = if (!url.startsWith(MAIN_URL)) MAIN_URL + url else url
 
         System.getProperties().put("org.apache.commons.logging.simplelog.defaultlog", "error")
-
+        java.util.logging.Logger.getLogger("com.gargoylesoftware").level = Level.OFF
+        System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog")
         val webClient = WebClient()
         webClient.options.isThrowExceptionOnScriptError = false
 
@@ -91,6 +94,9 @@ class ParseShopService {
                 }
                 .toMutableList()
 
+        val imgUrl = doc.select(".thickbox img")
+                .attr("src")
+
         val productDetails = ProductDetails()
         productDetails.productCount = productCount
         productDetails.amountDetails = mutableListOf(priceDetails[0].first)
@@ -100,6 +106,7 @@ class ParseShopService {
         product.internalName = internalName
         product.externalName = externalName
         product.url = url
+        product.imgUrl = imgUrl
         return product
     }
 }
