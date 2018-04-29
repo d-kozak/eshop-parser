@@ -6,14 +6,120 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title th:text="${product.externalName}">Product</title>
+    <link rel="stylesheet" href="../static/css/starter-template.css" th:href="@{/css/starter-template.css}">
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/utils.js}" src="../static/css/utils.js"></script>
 </head>
 <body th:object="${product}">
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/home">Eobaly web scrapper</a>
+    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"/>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <form th:action="@{/logout}" method="post">
+                <div class="nav-link">
+                    <input type="submit" value="logout"/>
+                </div>
+            </form>
+        </li>
+    </ul>
+</nav>
 
-<h1 th:text="*{externalName}"></h1>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+                <div th:if="${productCategories.size() != 0}">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a th:href="@{/}" class="nav-link" href="#">
+                                <span data-feather="shopping-cart"></span>
+                                <span>All</span>
+                            </a>
+                        </li>
+                        <li th:each="category : ${productCategories}" class="nav-item">
+                            <a th:href="@{/category/{category}(category=${category.name})}" th:object="${category}"
+                               class="nav-link" href="#">
+                                <span data-feather="shopping-cart"></span>
+                                <span th:text="*{name}">Name</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div>
+                <h1 th:text="*{externalName}">External name</h1>
+                <h2 th:text="*{internalName}">Internal name</h2>
+                <a th:href="*{url}">Original product link</a>
+            </div>
+        </main>
+    </div>
 
-<h2 th:text="*{internalName}"></h2>
 
-<a th:href="*{url}">Original product link</a>
+</div>
+
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace();
+</script>
+
+<script>
+    const getParams = query => {
+        if(!query){
+            return { };
+        }
+
+        return (/^[?#]/.test(query) ? query.slice(1) : query)
+            .split('&')
+            .reduce((params,param) => {
+                let [key,value] = param.split('=');
+                params[key] = value ? decodeURIComponent(value.replace(/\+/g,' ')) : '';
+                return params;
+            },{});
+    };
+
+    let currentCategory = getParams(window.location.search).category;
+    if(currentCategory){
+        console.log(`current category is ${currentCategory}`);
+    } else {
+        console.warn('no category selected');
+    }
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </body>
 </html>
