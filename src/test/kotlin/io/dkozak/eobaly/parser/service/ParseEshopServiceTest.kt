@@ -39,8 +39,8 @@ class ParseEshopServiceTest {
 
     @Before
     fun init() {
-        val parseEshopService = ParseShopService()
-        eobalyParsingTask = EobalyParsingTask(parseEshopService, productRepository, productDetailsRepository, productCategoryRepository, errorLogRepository)
+        val parseEshopService = ParseShopService(productRepository, productDetailsRepository, productCategoryRepository)
+        eobalyParsingTask = EobalyParsingTask(parseEshopService, productRepository, errorLogRepository)
     }
 
     @Test

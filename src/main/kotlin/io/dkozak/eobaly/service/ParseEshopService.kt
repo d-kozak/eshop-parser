@@ -4,8 +4,11 @@ package io.dkozak.eobaly.service
 import com.gargoylesoftware.htmlunit.WebClient
 import com.gargoylesoftware.htmlunit.html.DomNode
 import com.gargoylesoftware.htmlunit.html.HtmlPage
+import io.dkozak.eobaly.dao.ProductCategoryRepository
+import io.dkozak.eobaly.dao.ProductDetailsRepository
 import io.dkozak.eobaly.dao.ProductRepository
 import io.dkozak.eobaly.domain.Product
+import io.dkozak.eobaly.domain.ProductCategory
 import io.dkozak.eobaly.domain.ProductDetails
 import io.dkozak.eobaly.tasks.EobalyParsingTask
 import org.jboss.logging.Logger
@@ -13,12 +16,18 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.springframework.stereotype.Service
 import java.util.logging.Level
+import javax.transaction.Transactional
 
 
 val MAIN_URL = "https://www.eobaly.cz"
 
 @Service
-class ParseShopService {
+@Transactional
+class ParseShopService(
+        private val productRepository: ProductRepository,
+        private val productDetailsRepository: ProductDetailsRepository,
+        private val productCategoryRepository: ProductCategoryRepository
+) {
 
     private val log = Logger.getLogger(EobalyParsingTask::class.java)
 
@@ -29,8 +38,8 @@ class ParseShopService {
                     .toList()
 
     fun parseCategoryPage(url: String, productRepository: ProductRepository): Pair<List<String>, List<String>> {
-        var result = mutableListOf<String>()
-        var failedLinks = mutableListOf<String>()
+        val result = mutableListOf<String>()
+        val failedLinks = mutableListOf<String>()
         val fullUrl = if (!url.startsWith(MAIN_URL)) MAIN_URL + url else url
 
         System.getProperties().put("org.apache.commons.logging.simplelog.defaultlog", "error")
@@ -108,6 +117,35 @@ class ParseShopService {
         product.url = url
         product.imgUrl = imgUrl
         return product
+    }
+
+    fun parseProduct(url: String, productCategory: ProductCategory) {
+        val parsedProduct = parseProduct(url)
+        var productInDb = productRepository.findByInternalName(parsedProduct.internalName)
+        if (productInDb == null) {
+            parsedProduct.category = productCategory
+            val detailsInDb = productDetailsRepository.save(parsedProduct.details[0])
+            productInDb = productRepository.save(parsedProduct)
+            detailsInDb.product = productInDb
+            parsedProduct.details.add(detailsInDb)
+        } else {
+            var newProductDetails = parsedProduct.details[0]
+            newProductDetails = productDetailsRepository.save(newProductDetails)
+            productInDb.details.add(newProductDetails)
+            newProductDetails.product = productInDb
+            productInDb.details.add(newProductDetails)
+        }
+    }
+
+    fun getProductCategory(categoryUrl: String): ProductCategory {
+        var productCategory = productCategoryRepository.findByUrl(categoryUrl)
+        if (productCategory == null) {
+            productCategory = ProductCategory()
+            productCategory.name = parseNameFromUrl(categoryUrl)
+            productCategory.url = categoryUrl
+            productCategoryRepository.save(productCategory)
+        }
+        return productCategory
     }
 }
 

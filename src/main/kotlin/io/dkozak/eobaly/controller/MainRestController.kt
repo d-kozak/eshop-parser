@@ -1,33 +1,19 @@
 package io.dkozak.eobaly.controller
 
-import io.dkozak.eobaly.dao.ProductRepository
+import io.dkozak.eobaly.domain.ProductDetailsView
+import io.dkozak.eobaly.service.ProductService
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
-import java.util.regex.Pattern
 
 @RestController
 class MainRestController
 (
-        private val productRepository: ProductRepository
+        private val productService: ProductService
 ) {
     @GetMapping("/product-price/{internalName}")
-    fun productPrice(model: Model, @PathVariable internalName: String): List<Pair<Date, Double>> {
-        val product = productRepository.findByInternalName(internalName)
-        if (product == null) {
-            throw RuntimeException("product not found")
-        }
-        return product.details.map {
-            it.timestamp to parsePrice(it.priceDetails)
-        }
+    fun productPrice(model: Model, @PathVariable internalName: String): ProductDetailsView {
+        return productService.loadProductDetails(internalName)
     }
-
-
-    private fun parsePrice(priceDetails: List<String>): Double =
-            priceDetails.map {
-                val pattern = Pattern.compile(""".*(\d)+.*""")
-                pattern.matcher(it).group(1).toDouble()
-            }.average()
 }
