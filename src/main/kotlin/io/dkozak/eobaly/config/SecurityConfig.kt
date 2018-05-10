@@ -14,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 class SecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
-                .antMatchers("/info", "/css/**", "/js/**").permitAll()
+                .antMatchers("/info", "/css/**", "/js/**", "/images/**", "/webjars/**,**/favicon.ico").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

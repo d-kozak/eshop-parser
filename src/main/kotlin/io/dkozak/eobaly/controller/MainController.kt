@@ -9,6 +9,7 @@ import org.springframework.ui.Model
 import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
 class MainController(
@@ -23,19 +24,16 @@ class MainController(
     fun info() = "info.html"
 
     @GetMapping("/")
-    fun home(model: Model): String {
-        model["products"] = productRepository.findAll()
+    fun home(model: Model, @RequestParam(required = false) search: String?): String {
+        model["products"] = if (search != null) productRepository.findByExternalNameLike("%$search%") else productRepository.findAll()
         model["productCategories"] = productCategoryRepository.findAll()
         return "home.html"
     }
 
     @GetMapping("/category/{category}")
-    fun getInCategory(model: Model, @PathVariable category: String): String {
-        val category = productCategoryRepository.findByName(category)
-        if (category == null) {
-            throw RuntimeException("wrong category")
-        }
-        model["products"] = productRepository.findByCategory(category)
+    fun getInCategory(model: Model, @PathVariable category: String, @RequestParam(required = false) search: String?): String {
+        val productCategory = productCategoryRepository.findByName(category) ?: throw RuntimeException("wrong category")
+        model["products"] = if (search != null) productRepository.findByCategoryAndExternalNameLike(productCategory, "%$search%") else productRepository.findByCategory(productCategory)
         model["productCategories"] = productCategoryRepository.findAll()
 
         return "home.html"
@@ -43,10 +41,7 @@ class MainController(
 
     @GetMapping("/product/{internalName}")
     fun product(model: Model, @PathVariable internalName: String): String {
-        val product = productRepository.findByInternalName(internalName)
-        if (product == null) {
-            throw RuntimeException("product not found")
-        }
+        val product = productRepository.findByInternalName(internalName) ?: throw RuntimeException("product not found")
         model["product"] = product
         model["productCategories"] = productCategoryRepository.findAll()
         return "product.html"

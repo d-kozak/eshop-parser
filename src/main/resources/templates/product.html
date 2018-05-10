@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="../static/css/starter-template.css" th:href="@{/css/starter-template.css}">
     <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
     <style>
         .img-limited {
@@ -22,7 +21,8 @@
 <body th:object="${product}">
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Eobaly web scrapper</a>
-    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"/>
+    <input id="search-input" onkeyup="if(event.keyCode === 13) find()" class="form-control form-control-dark w-100"
+           type="text" placeholder="Search" aria-label="Search"/>
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
             <form th:action="@{/logout}" method="post">
@@ -57,38 +57,11 @@
     </div>
 </div>
 
+<script th:src="@{/js/product.js}" src="/static/js/product.js"></script>
+<script th:src="@{/js/common.js}" src="/static/js/common.js"></script>
 <script>
     const internalName = "[[${product.internalName}]]";
-    const url = `http://${window.location.host}/product-price/${internalName}`;
-    console.log(`loading from ${url}`);
-    fetch(url,
-        {
-            method: 'GET',
-            credentials: 'include'
-        }
-    ).then(
-        response => response.json()
-    ).then(
-        response => {
-            console.log(response);
-            const trace = {
-                x: response.details.map(it => it.timestamp),
-                y: response.details.map(it => it.prize),
-                type: 'scatter'
-            };
-            const data = [trace];
-            Plotly.newPlot('chart', data);
-            console.log('chard loaded...');
-
-            const average = arr => arr.reduce((p, c) => p + c, 0) / arr.length;
-            const averagePrice = average(response.details.map(it => it.prize));
-
-            document.getElementById('main-content')
-                .appendChild(document.createTextNode(
-                    `The average price over all is ${averagePrice}`
-                ));
-        }
-    );
+    renderGraph(internalName);
 </script>
 
 </body>

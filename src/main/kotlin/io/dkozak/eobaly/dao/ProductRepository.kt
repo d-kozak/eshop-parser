@@ -8,4 +8,6 @@ interface ProductRepository : JpaRepository<Product, Long> {
 
     fun findByCategory(category: ProductCategory): List<Product>
     fun findByInternalName(internalName: String): Product?
+    fun findByExternalNameLike(externalName: String): List<Product>
+    fun findByCategoryAndExternalNameLike(category: ProductCategory, externalName: String): List<Product>
 }
