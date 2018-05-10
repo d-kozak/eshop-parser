@@ -6,7 +6,8 @@ import io.dkozak.eobaly.dao.ProductRepository
 import io.dkozak.eobaly.domain.ErrorLog
 import io.dkozak.eobaly.domain.ProductCategory
 import io.dkozak.eobaly.domain.ProductLog
-import io.dkozak.eobaly.service.ParseShopService
+import io.dkozak.eobaly.service.MAIN_URL
+import io.dkozak.eobaly.service.ParseEshopService
 import io.dkozak.eobaly.utils.stackTraceAsString
 import org.jboss.logging.Logger
 import org.springframework.scheduling.annotation.Scheduled
@@ -15,7 +16,7 @@ import java.util.concurrent.CompletableFuture
 
 @Component
 class EobalyParsingTask(
-        private val parseEshopService: ParseShopService,
+        private val parseEshopService: ParseEshopService,
         private val productRepository: ProductRepository,
         private val errorLogRepository: ErrorLogRepository,
         private val productLogRepository: ProductLogRepository
@@ -27,6 +28,7 @@ class EobalyParsingTask(
     fun start() {
         log.info("Starting")
         val categoriesUrl = parseEshopService.parseMainPage()
+                .map { if (it.startsWith(MAIN_URL)) MAIN_URL + it else it }
         log.info("Found ${categoriesUrl.size} categories : $categoriesUrl")
         for (categoryUrl in categoriesUrl) {
             val productCategory = parseEshopService.getProductCategory(categoryUrl)
@@ -46,7 +48,7 @@ class EobalyParsingTask(
         log.info("Finished")
     }
 
-    private fun parseCategory(productCategory: ProductCategory, categoryUrl: String) {
+    fun parseCategory(productCategory: ProductCategory, categoryUrl: String) {
         log.info("${productCategory.name} started")
         val loadedProductUrls = parseEshopService.parseCategoryPage(categoryUrl, productRepository)
         for (url in loadedProductUrls) {

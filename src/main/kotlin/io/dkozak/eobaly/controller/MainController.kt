@@ -58,7 +58,6 @@ class MainController(
 
     @GetMapping("/scraping")
     fun scraping(): String {
-
         return "scraping.html"
     }
 }

@@ -26,7 +26,7 @@ val MAIN_URL = "https://www.eobaly.cz"
 
 @Service
 @Transactional
-class ParseShopService(
+class ParseEshopService(
         private val productRepository: ProductRepository,
         private val productDetailsRepository: ProductDetailsRepository,
         private val productCategoryRepository: ProductCategoryRepository,

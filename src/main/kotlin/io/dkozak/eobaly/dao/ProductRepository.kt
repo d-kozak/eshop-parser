@@ -10,4 +10,5 @@ interface ProductRepository : JpaRepository<Product, Long> {
     fun findByInternalName(internalName: String): Product?
     fun findByExternalNameLike(externalName: String): List<Product>
     fun findByCategoryAndExternalNameLike(category: ProductCategory, externalName: String): List<Product>
+    fun findByExternalName(externalName: String): Product?
 }

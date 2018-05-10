@@ -17,4 +17,6 @@ Setup
 3) open your browser and go to localhost:8080
 4) login with credentials user user
     
-     
+## Known issues
+* parse single product does not parsists the product with all dependencies
+* a couple of products fails to be parsed - see error log     

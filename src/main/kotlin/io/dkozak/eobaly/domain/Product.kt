@@ -3,6 +3,13 @@ package io.dkozak.eobaly.domain
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
+
+var UNKOWN_PRODUCT = Product().let {
+    it.category = UNKNOWN_CATEGORY
+    it.externalName = "UNKOWN"
+    it
+}
+
 @Entity
 class Product {
     @Id

@@ -115,6 +115,11 @@
         <div class="line"></div>
         <form class="form-inline" action="#" id="parse-product-form">
             <h3>Parse product</h3>
+            <input
+                    id="csrf"
+                    type="hidden"
+                    th:name="${_csrf.parameterName}"
+                    th:value="${_csrf.token}"/>
             <label class="sr-only" for="productUrl">ProductUrl</label>
             <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="productUrl" placeholder="Product url">
             <button type="submit" class="btn btn-primary">Parse</button>

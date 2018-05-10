@@ -1,15 +1,17 @@
 package io.dkozak.eobaly.service
 
+import io.dkozak.eobaly.dao.ProductDetailsRepository
 import io.dkozak.eobaly.dao.ProductRepository
-import io.dkozak.eobaly.domain.ProductDetailView
-import io.dkozak.eobaly.domain.ProductDetailsView
+import io.dkozak.eobaly.domain.*
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
 @Service
 @Transactional
 class ProductService(
-        private val productRepository: ProductRepository
+        private val productRepository: ProductRepository,
+        private val productDetailsRepository: ProductDetailsRepository,
+        private val parseEshopService: ParseEshopService
 ) {
 
     fun loadProductDetails(productUrl: String): ProductDetailsView {
@@ -19,6 +21,16 @@ class ProductService(
             ProductDetailView(it.timestamp, parseNum(it.priceDetails), parseNum(it.amountDetails).toLong())
         }
         return ProductDetailsView(details)
+    }
+
+    fun parseProduct(url: String): Product {
+        val product = parseEshopService.parseProduct(url)
+        product.category = UNKNOWN_CATEGORY
+        for (detail in product.details) {
+            detail.product = UNKOWN_PRODUCT
+            productDetailsRepository.save(detail)
+        }
+        return productRepository.save(product)
     }
 
 

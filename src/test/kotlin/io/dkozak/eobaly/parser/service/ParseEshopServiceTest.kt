@@ -1,7 +1,7 @@
 package io.dkozak.eobaly.parser.service
 
 import io.dkozak.eobaly.dao.*
-import io.dkozak.eobaly.service.ParseShopService
+import io.dkozak.eobaly.service.ParseEshopService
 import io.dkozak.eobaly.tasks.EobalyParsingTask
 import org.jsoup.Jsoup
 import org.junit.Before
@@ -22,7 +22,7 @@ class ParseEshopServiceTest {
 
     private lateinit var eobalyParsingTask: EobalyParsingTask
 
-    private lateinit var parseEshopService: ParseShopService
+    private lateinit var parseEshopService: ParseEshopService
 
     @Mock
     lateinit var productRepository: ProductRepository
@@ -41,7 +41,7 @@ class ParseEshopServiceTest {
 
     @Before
     fun init() {
-        parseEshopService = ParseShopService(productRepository, productDetailsRepository, productCategoryRepository, errorLogRepository)
+        parseEshopService = ParseEshopService(productRepository, productDetailsRepository, productCategoryRepository, errorLogRepository)
         eobalyParsingTask = EobalyParsingTask(parseEshopService, productRepository, errorLogRepository, productLogRepository)
     }
 
