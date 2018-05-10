@@ -17,14 +17,6 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 
     <link rel="stylesheet" href="../static/css/template.css" th:href="@{/css/template.css}">
-
-    <style>
-        .img-limited {
-            max-width: 200px;
-            max-height: 200px;
-        }
-    </style>
-
 </head>
 <body>
 
@@ -38,7 +30,7 @@
         </div>
 
         <ul class="list-unstyled components">
-            <li class="active">
+            <li>
                 <a th:href="@{/}" href="#">
                     <i class="glyphicon glyphicon-home"></i>
                     <span>All categories</span>
@@ -65,7 +57,7 @@
                     <span>Error log</span>
                 </a>
             </li>
-            <li>
+            <li class="active">
                 <a th:href="@{/about}" href="#">
                     <i class="glyphicon glyphicon-home"></i>
                     <span>About</span>
@@ -93,6 +85,7 @@
                            aria-label="Search"/>
                 </ul>
 
+
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                     <ul class="nav navbar-nav navbar-right">
@@ -108,22 +101,20 @@
                 </div>
             </div>
         </nav>
-        <div th:if="${categoryName}">
-            <h2 th:text="${'Category: ' + categoryName}"></h2>
-        </div>
-        <div th:if="not ${categoryName}">
-            <h2>Products</h2>
-        </div>
+
+        <h2>Collapsible Sidebar Using Bootstrap 3</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+            nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+            nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
+            anim id est laborum.</p>
+
         <div class="line"></div>
-        <div th:each="product : ${products}">
-            <div th:object="${product}">
-                <img class="img-responsive img-thumbnail img-limited"
-                     th:src="'https://www.eobaly.cz/'+ *{imgUrl}"
-                     src="https://www.eobaly.cz/pool/vzor/products/clim_thumb_xxl_103841_1.jpg"/>
-                <a th:href="@{/product/{name}(name=*{internalName})}" th:text="*{externalName}"></a>
-            </div>
-            <div class="line"></div>
-        </div>
     </div>
 </div>
 
@@ -137,5 +128,3 @@
 <script th:src="@{/js/common.js}" src="../static/js/common.js"></script>
 </body>
 </html>
-
-

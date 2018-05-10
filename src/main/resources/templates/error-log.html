@@ -5,56 +5,137 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="../static/css/starter-template.css" th:href="@{/css/starter-template.css}">
-    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
-    <title>Error log</title>
+    <title>Main</title>
+
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+
+    <link rel="stylesheet" href="../static/css/template.css" th:href="@{/css/template.css}">
 </head>
 <body>
-<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/">Eobaly web scrapper</a>
-    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"/>
-    <ul class="navbar-nav px-3">
-        <li class="nav-item text-nowrap">
-            <form th:action="@{/logout}" method="post">
-                <div class="nav-link">
-                    <input type="submit" value="logout"/>
-                </div>
-            </form>
-        </li>
-    </ul>
-</nav>
 
-<div class="container-fluid">
-    <div class="row">
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-            <div class="sidebar-sticky">
-                <a th:href="@{/}">Go back</a>
+<div class="wrapper">
+
+    <nav id="sidebar">
+
+        <div class="sidebar-header">
+            <h3>Eobaly scrapper</h3>
+            <strong>ES</strong>
+        </div>
+
+        <ul class="list-unstyled components">
+            <li>
+                <a th:href="@{/}" href="#">
+                    <i class="glyphicon glyphicon-home"></i>
+                    <span>All categories</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">
+                    <i class="glyphicon glyphicon-briefcase"></i>
+                    <span>Categories</span>
+                </a>
+                <ul class="collapse list-unstyled" id="homeSubmenu">
+                    <li th:each="category : ${productCategories}">
+                        <a th:href="@{/category/{category}(category=${category.name})}" th:object="${category}"
+                           href="#">
+                            <span th:text="*{name}">Name</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a th:href="@{/error-log}" href="#">
+                    <i class="glyphicon glyphicon-link"></i>
+                    <span>Error log</span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/about}" href="#">
+                    <i class="glyphicon glyphicon-home"></i>
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+
+    <div id="content">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+
+                <div class="navbar-header">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                        <i class="glyphicon glyphicon-align-left"></i>
+                        <span>Toggle Sidebar</span>
+                    </button>
+                </div>
+
+
+                <ul class="navbar-header">
+                    <input id="search-input" class="form-control form-control-dark w-100" type="text"
+                           placeholder="Search"
+                           aria-label="Search"/>
+                </ul>
+
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" onclick="document.getElementById('logout-form').submit()">Logout</a>
+                            <form th:action="@{/logout}" method="post" id="logout-form">
+                                <div class="nav-link">
+                                    <input type="hidden" value="logout"/>
+                                </div>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-            <div>
-                <h1>Error logs</h1>
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">Url</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">Message</th>
-                        <th scope="col">StackTrace</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="log : ${errorLogs}" scope="row">
-                        <td th:text="${log.url}">url</td>
-                        <td th:text="${log.type}">type</td>
-                        <td th:text="${log.message}">message</td>
-                        <td th:text="${log.stackTrace}">stackTrace</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
+
+        <div>
+            <h2>Error logs</h2>
+            <div class="line"></div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Url</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Message</th>
+                    <th scope="col">StackTrace</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="log : ${errorLogs}" scope="row">
+                    <td th:text="${log.url}">url</td>
+                    <td th:text="${log.type}">type</td>
+                    <td th:text="${log.message}">message</td>
+                    <td th:text="${log.stackTrace}">stackTrace</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="line"></div>
     </div>
 </div>
+
+
+<script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+<!-- Bootstrap Js CDN -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- Custom Scroller Js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+<script th:src="@{/js/template.js}" src="../static/js/template.js"></script>
+<script th:src="@{/js/common.js}" src="../static/js/common.js"></script>
 </body>
 </html>

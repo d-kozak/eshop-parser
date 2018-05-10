@@ -7,7 +7,6 @@ import io.dkozak.eobaly.domain.ProductCategory
 import io.dkozak.eobaly.service.ParseShopService
 import io.dkozak.eobaly.utils.stackTraceAsString
 import org.jboss.logging.Logger
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.util.concurrent.CompletableFuture
 
@@ -20,7 +19,7 @@ class EobalyParsingTask(
 
     private val log = Logger.getLogger(EobalyParsingTask::class.java)
 
-    @Scheduled(initialDelay = 1000, fixedDelay = 1000 * 60 * 60)
+    //    @Scheduled(initialDelay = 1000, fixedDelay = 1000 * 60 * 60)
     fun start() {
         log.info("Starting")
         val categoriesUrl = parseEshopService.parseMainPage()

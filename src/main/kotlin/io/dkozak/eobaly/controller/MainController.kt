@@ -21,7 +21,7 @@ class MainController(
 
 
     @GetMapping("/info")
-    fun info() = "info.html"
+    fun info() = "about.html"
 
     @GetMapping("/")
     fun home(model: Model, @RequestParam(required = false) search: String?): String {
@@ -35,7 +35,7 @@ class MainController(
         val productCategory = productCategoryRepository.findByName(category) ?: throw RuntimeException("wrong category")
         model["products"] = if (search != null) productRepository.findByCategoryAndExternalNameLike(productCategory, "%$search%") else productRepository.findByCategory(productCategory)
         model["productCategories"] = productCategoryRepository.findAll()
-
+        model["categoryName"] = category
         return "home.html"
     }
 
@@ -50,17 +50,13 @@ class MainController(
     @GetMapping("/error-log")
     fun errorLog(model: Model): String {
         model["errorLogs"] = errorLogRepository.findAll()
+        model["productCategories"] = productCategoryRepository.findAll()
         return "error-log.html"
     }
 
-    @GetMapping("/api/parse/{internalName}")
-    fun startParsing(@PathVariable(required = false) internalName: String?): String {
-        if (internalName == null) {
-            eobalyParsingTask.start()
-        } else {
-            eobalyParsingTask.startFor(internalName)
-        }
-        return "redirect:/"
+    @GetMapping("/about")
+    fun about(model: Model): String {
+        model["productCategories"] = productCategoryRepository.findAll()
+        return "about.html"
     }
-
 }

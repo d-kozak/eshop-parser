@@ -29,10 +29,12 @@ function renderGraph(internalName) {
                 const average = arr => arr.reduce((p, c) => p + c, 0) / arr.length;
                 const averagePrice = average(response.details.map(it => it.prize));
 
+                const priceMgs = `The average price over all is ${averagePrice}`;
+                const newElement = document.createElement('p');
+                newElement.appendChild(document.createTextNode(priceMgs));
+
                 document.getElementById('main-content')
-                    .appendChild(document.createTextNode(
-                        `The average price over all is ${averagePrice}`)
-                    );
+                    .appendChild(newElement);
             }
         );
 }
