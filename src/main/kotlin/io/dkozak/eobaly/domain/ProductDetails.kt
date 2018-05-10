@@ -1,5 +1,6 @@
 package io.dkozak.eobaly.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*
 import javax.persistence.*
 
@@ -27,6 +28,7 @@ class ProductDetails {
     var timestamp = Date()
 
     @ManyToOne
+    @JsonIgnore
     lateinit var product: Product
 
     override fun toString(): String {

@@ -1,8 +1,12 @@
 package io.dkozak.eobaly.service
 
+import io.dkozak.eobaly.dao.ProductCategoryRepository
 import io.dkozak.eobaly.dao.ProductDetailsRepository
 import io.dkozak.eobaly.dao.ProductRepository
-import io.dkozak.eobaly.domain.*
+import io.dkozak.eobaly.domain.Product
+import io.dkozak.eobaly.domain.ProductDetailView
+import io.dkozak.eobaly.domain.ProductDetailsView
+import io.dkozak.eobaly.domain.UNKNOWN_CATEGORY
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -10,6 +14,7 @@ import javax.transaction.Transactional
 @Transactional
 class ProductService(
         private val productRepository: ProductRepository,
+        private val productCategoryRepository: ProductCategoryRepository,
         private val productDetailsRepository: ProductDetailsRepository,
         private val parseEshopService: ParseEshopService
 ) {
@@ -27,21 +32,19 @@ class ProductService(
         val product = parseEshopService.parseProduct(url)
         product.category = UNKNOWN_CATEGORY
         for (detail in product.details) {
-            detail.product = UNKOWN_PRODUCT
+            detail.product = product
             productDetailsRepository.save(detail)
         }
         return productRepository.save(product)
     }
-
-
-    private fun parseNum(priceDetails: List<String>): Double =
-            priceDetails.map {
-                """\d+(\.\d+)?""".toRegex()
-                        .find(it)
-                        ?.groups
-                        ?.get(0)
-                        ?.value
-                        ?.toDouble() ?: 0.0
-            }.average()
-
 }
+
+fun parseNum(priceDetails: List<String>): Double =
+        priceDetails.map {
+            """\d+(\.\d+)?""".toRegex()
+                    .find(it)
+                    ?.groups
+                    ?.get(0)
+                    ?.value
+                    ?.toDouble() ?: 0.0
+        }.average()

@@ -4,14 +4,8 @@ package io.dkozak.eobaly.service
 import com.gargoylesoftware.htmlunit.WebClient
 import com.gargoylesoftware.htmlunit.html.DomNode
 import com.gargoylesoftware.htmlunit.html.HtmlPage
-import io.dkozak.eobaly.dao.ErrorLogRepository
-import io.dkozak.eobaly.dao.ProductCategoryRepository
-import io.dkozak.eobaly.dao.ProductDetailsRepository
-import io.dkozak.eobaly.dao.ProductRepository
-import io.dkozak.eobaly.domain.ErrorLog
-import io.dkozak.eobaly.domain.Product
-import io.dkozak.eobaly.domain.ProductCategory
-import io.dkozak.eobaly.domain.ProductDetails
+import io.dkozak.eobaly.dao.*
+import io.dkozak.eobaly.domain.*
 import io.dkozak.eobaly.tasks.EobalyParsingTask
 import io.dkozak.eobaly.utils.stackTraceAsString
 import org.jboss.logging.Logger
@@ -30,7 +24,8 @@ class ParseEshopService(
         private val productRepository: ProductRepository,
         private val productDetailsRepository: ProductDetailsRepository,
         private val productCategoryRepository: ProductCategoryRepository,
-        private val errorLogRepository: ErrorLogRepository
+        private val errorLogRepository: ErrorLogRepository,
+        private val productLogRepository: ProductLogRepository
 ) {
 
     private val log = Logger.getLogger(EobalyParsingTask::class.java)
@@ -59,7 +54,8 @@ class ParseEshopService(
                         .textContent
                         .toInt()
             } else 1
-
+            productLogRepository.save(ProductLog(url = fullUrl, state = "SUCCESS"))
+            productLogRepository.flush()
             for (i in 1..maxPageNumber) {
                 val nextUrl = "$fullUrl?page=$i"
                 try {
@@ -71,6 +67,8 @@ class ParseEshopService(
                                         .getNamedItem("href")
                                         .nodeValue
                             }.toList())
+                    productLogRepository.save(ProductLog(url = nextUrl, state = "SUCCESS"))
+                    productLogRepository.flush()
 
                 } catch (ex: Exception) {
                     ex.printStackTrace()
@@ -81,6 +79,8 @@ class ParseEshopService(
                     log.url = nextUrl
                     log.stackTrace = ex.stackTraceAsString()
                     errorLogRepository.save(log)
+                    productLogRepository.save(ProductLog(url = nextUrl, state = "FAILURE"))
+                    productLogRepository.flush()
                 }
             }
             return result

@@ -69,7 +69,7 @@ function parseCategory(url) {
         headers: {
             'Accept': 'application/json',
             'Content-type': 'application/json',
-            'X-CSRF-TOKEN': csrfInput.valuera
+            'X-CSRF-TOKEN': csrfInput.value
         },
         method: 'POST',
         credentials: 'include',

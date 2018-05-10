@@ -1,9 +1,11 @@
 package io.dkozak.eobaly.domain
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
+@Volatile
 var UNKNOWN_CATEGORY = ProductCategory().let {
     it.name = "UNKOWN"
     it.url = "NONE"
@@ -23,6 +25,7 @@ class ProductCategory {
     var url = ""
 
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     var products: List<Product> = emptyList()
 
 

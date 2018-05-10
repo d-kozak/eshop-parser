@@ -111,19 +111,34 @@
             </div>
         </nav>
 
-        <h2>Collapsible Sidebar Using Bootstrap 3</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-            nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-            ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-            nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-            anim id est laborum.</p>
 
+        <h1 id="eobaly-web-crawler">EOBALY web crawler</h1>
         <div class="line"></div>
+        <p>PDS Proj 2018</p>
+        <p>author: David Kozak</p>
+        <p>contact: dkozak94@gmail.com</p>
+        <p>Dependencies: </p>
+        <ul>
+            <li>java 8 runtime</li>
+            <li>maven</li>
+            <li>mysql database</li>
+        </ul>
+        <p>Setup:</p>
+        <ol>
+            <li> provide credentials to access database in /src/main/resources/application.properties</li>
+            <li> run with mvn spring-boot:run</li>
+            <li> open your browser and go to localhost:8080</li>
+            <li> login with credentials user user</li>
+        </ol>
+        <h2 id="known-issues">Known issues</h2>
+        <ul>
+            <li>parsing single product does not persist the product with all dependencies</li>
+            <li>parsing fails for a couple of products - see error log</li>
+            <li>no pagination</li>
+            <li>cannot limit number of threads to use for the parsing</li>
+            <li>problems with Czech encoding</li>
+        </ul>
+
     </div>
 </div>
 

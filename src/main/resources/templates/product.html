@@ -126,6 +126,9 @@
             <p>Original product url is
                 <a th:href="*{url}" th:text="*{url}"></a>
             </p>
+            <p>Product category is
+                <a th:href="'/category/' + *{category.name}" th:text="*{category.name}"></a>
+            </p>
             <img class="img-responsive img-limited" th:src="'https://www.eobaly.cz/'+ *{imgUrl}"
                  src="https://www.eobaly.cz/pool/vzor/products/clim_thumb_xxl_103841_1.jpg"/>
             <div class="line"></div>

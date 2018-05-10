@@ -41,7 +41,8 @@ class ParseEshopServiceTest {
 
     @Before
     fun init() {
-        parseEshopService = ParseEshopService(productRepository, productDetailsRepository, productCategoryRepository, errorLogRepository)
+        parseEshopService = ParseEshopService(productRepository, productDetailsRepository, productCategoryRepository, errorLogRepository, productLogRepository
+        )
         eobalyParsingTask = EobalyParsingTask(parseEshopService, productRepository, errorLogRepository, productLogRepository)
     }
 

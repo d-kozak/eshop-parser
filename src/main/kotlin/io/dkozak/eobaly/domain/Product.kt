@@ -3,10 +3,12 @@ package io.dkozak.eobaly.domain
 import javax.persistence.*
 import javax.validation.constraints.NotNull
 
-
+@Volatile
 var UNKOWN_PRODUCT = Product().let {
     it.category = UNKNOWN_CATEGORY
     it.externalName = "UNKOWN"
+    it.externalName = "UNKOWN"
+    it.url = "pool/vzor/products/clim_thumb_xxl_103841_1.jpg"
     it
 }
 
@@ -21,7 +23,7 @@ class Product {
     var internalName: String = ""
     var externalName: String = ""
 
-    var imgUrl = "https://www.eobaly.cz/pool/vzor/products/clim_thumb_xxl_103841_1.jpg"
+    var imgUrl = "pool/vzor/products/clim_thumb_xxl_103841_1.jpg"
 
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     var details: MutableList<ProductDetails> = mutableListOf()

@@ -18,5 +18,8 @@ Setup
 4) login with credentials user user
     
 ## Known issues
-* parse single product does not parsists the product with all dependencies
-* a couple of products fails to be parsed - see error log     
+* parsing single product does not persist the product with all dependencies
+* parsing fails for a couple of products - see error log
+* no pagination
+* cannot limit number of threads to use for the parsing
+* problems with Czech encoding     

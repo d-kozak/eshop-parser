@@ -57,7 +57,8 @@ class MainController(
     }
 
     @GetMapping("/scraping")
-    fun scraping(): String {
+    fun scraping(model: Model): String {
+        model["productCategories"] = productCategoryRepository.findAll()
         return "scraping.html"
     }
 }

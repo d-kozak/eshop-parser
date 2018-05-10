@@ -3,6 +3,7 @@ package io.dkozak.eobaly.controller
 import io.dkozak.eobaly.domain.Product
 import io.dkozak.eobaly.domain.ProductDetailsView
 import io.dkozak.eobaly.domain.ProductLog
+import io.dkozak.eobaly.service.DataGenerationService
 import io.dkozak.eobaly.service.ParseEshopService
 import io.dkozak.eobaly.service.ProductLogService
 import io.dkozak.eobaly.service.ProductService
@@ -17,6 +18,7 @@ class MainRestController
         private val productService: ProductService,
         private val parseEshopService: ParseEshopService,
         private val productLogService: ProductLogService,
+        private val dataGenerationService: DataGenerationService,
         private val eobalyParsingTask: EobalyParsingTask
 ) {
     @GetMapping("/product-price/{internalName}")
@@ -46,7 +48,12 @@ class MainRestController
         return "\"ok\""
     }
 
-
     @PostMapping("/parse/product/")
     fun parseProduct(@RequestBody url: String): Product = productService.parseProduct(url)
+
+    @GetMapping("/generate")
+    fun generate(): String {
+        dataGenerationService.generatePriceForAll()
+        return "\"ok\""
+    }
 }
