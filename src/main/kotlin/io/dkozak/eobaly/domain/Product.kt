@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull
 var UNKOWN_PRODUCT = Product().let {
     it.category = UNKNOWN_CATEGORY
     it.externalName = "UNKOWN"
-    it.externalName = "UNKOWN"
+    it.internalName = "UNKOWN"
     it.url = "pool/vzor/products/clim_thumb_xxl_103841_1.jpg"
     it
 }
