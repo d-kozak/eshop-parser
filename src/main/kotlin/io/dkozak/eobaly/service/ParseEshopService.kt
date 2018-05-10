@@ -52,11 +52,13 @@ class ParseShopService(
         webClient.options.isThrowExceptionOnScriptError = false
 
         webClient.use {
-            val maxPageNumber = webClient.getPage<HtmlPage>(fullUrl)
+            val nodeList = webClient.getPage<HtmlPage>(fullUrl)
                     .querySelectorAll("a.pager-number")
-                    .last()
-                    .textContent
-                    .toInt()
+            val maxPageNumber = if (nodeList.size > 0) {
+                nodeList.last()
+                        .textContent
+                        .toInt()
+            } else 1
 
             for (i in 1..maxPageNumber) {
                 val nextUrl = "$fullUrl?page=$i"
