@@ -19,10 +19,6 @@ class MainController(
         private val eobalyParsingTask: EobalyParsingTask
 ) {
 
-
-    @GetMapping("/info")
-    fun info() = "about.html"
-
     @GetMapping("/")
     fun home(model: Model, @RequestParam(required = false) search: String?): String {
         model["products"] = if (search != null) productRepository.findByExternalNameLike("%$search%") else productRepository.findAll()
@@ -58,5 +54,11 @@ class MainController(
     fun about(model: Model): String {
         model["productCategories"] = productCategoryRepository.findAll()
         return "about.html"
+    }
+
+    @GetMapping("/scraping")
+    fun scraping(): String {
+
+        return "scraping.html"
     }
 }

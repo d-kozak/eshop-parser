@@ -1,9 +1,6 @@
 package io.dkozak.eobaly.parser.service
 
-import io.dkozak.eobaly.dao.ErrorLogRepository
-import io.dkozak.eobaly.dao.ProductCategoryRepository
-import io.dkozak.eobaly.dao.ProductDetailsRepository
-import io.dkozak.eobaly.dao.ProductRepository
+import io.dkozak.eobaly.dao.*
 import io.dkozak.eobaly.service.ParseShopService
 import io.dkozak.eobaly.tasks.EobalyParsingTask
 import org.jsoup.Jsoup
@@ -39,10 +36,13 @@ class ParseEshopServiceTest {
     @Mock
     lateinit var errorLogRepository: ErrorLogRepository
 
+    @Mock
+    lateinit var productLogRepository: ProductLogRepository
+
     @Before
     fun init() {
         parseEshopService = ParseShopService(productRepository, productDetailsRepository, productCategoryRepository, errorLogRepository)
-        eobalyParsingTask = EobalyParsingTask(parseEshopService, productRepository, errorLogRepository)
+        eobalyParsingTask = EobalyParsingTask(parseEshopService, productRepository, errorLogRepository, productLogRepository)
     }
 
     @Test

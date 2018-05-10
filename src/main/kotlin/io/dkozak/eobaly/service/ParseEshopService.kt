@@ -129,7 +129,7 @@ class ParseShopService(
         return product
     }
 
-    fun parseProduct(url: String, productCategory: ProductCategory) {
+    fun parseProduct(url: String, productCategory: ProductCategory): Product {
         val parsedProduct = parseProduct(url)
         var productInDb = productRepository.findByInternalName(parsedProduct.internalName)
         if (productInDb == null) {
@@ -145,6 +145,7 @@ class ParseShopService(
             newProductDetails.product = productInDb
             productInDb.details.add(newProductDetails)
         }
+        return productInDb
     }
 
     fun getProductCategory(categoryUrl: String): ProductCategory {

@@ -1,12 +1,15 @@
 package io.dkozak.eobaly.tasks
 
 import io.dkozak.eobaly.dao.ErrorLogRepository
+import io.dkozak.eobaly.dao.ProductLogRepository
 import io.dkozak.eobaly.dao.ProductRepository
 import io.dkozak.eobaly.domain.ErrorLog
 import io.dkozak.eobaly.domain.ProductCategory
+import io.dkozak.eobaly.domain.ProductLog
 import io.dkozak.eobaly.service.ParseShopService
 import io.dkozak.eobaly.utils.stackTraceAsString
 import org.jboss.logging.Logger
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.util.concurrent.CompletableFuture
 
@@ -14,12 +17,13 @@ import java.util.concurrent.CompletableFuture
 class EobalyParsingTask(
         private val parseEshopService: ParseShopService,
         private val productRepository: ProductRepository,
-        private val errorLogRepository: ErrorLogRepository
+        private val errorLogRepository: ErrorLogRepository,
+        private val productLogRepository: ProductLogRepository
 ) {
 
     private val log = Logger.getLogger(EobalyParsingTask::class.java)
 
-    //    @Scheduled(initialDelay = 1000, fixedDelay = 1000 * 60 * 60)
+    @Scheduled(initialDelay = 1000 * 60 * 60 * 24, fixedDelay = 1000 * 60 * 60 * 24)
     fun start() {
         log.info("Starting")
         val categoriesUrl = parseEshopService.parseMainPage()
@@ -49,6 +53,7 @@ class EobalyParsingTask(
             try {
                 log.info("parsing $url")
                 parseEshopService.parseProduct(url, productCategory)
+                productLogRepository.save(ProductLog(url = url, state = "SUCCESS"))
             } catch (ex: Exception) {
                 log.warn("Could not parse $url, because ${ex.message}")
                 ex.printStackTrace()
@@ -58,6 +63,7 @@ class EobalyParsingTask(
                 log.type = "PRODUCT_PAGE_FAIL"
                 log.stackTrace = ex.stackTraceAsString()
                 errorLogRepository.save(log)
+                productLogRepository.save(ProductLog(url = url, state = "FAILED"))
             }
         }
         log.info("${productCategory.name} finished")
