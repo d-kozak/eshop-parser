@@ -90,7 +90,9 @@
                 <ul class="navbar-header">
                     <input id="search-input" class="form-control form-control-dark w-100" type="text"
                            placeholder="Search"
-                           aria-label="Search"/>
+                           aria-label="Search"
+                           onkeyup="if(event.keyCode == 13) find()"
+                    />
                 </ul>
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
