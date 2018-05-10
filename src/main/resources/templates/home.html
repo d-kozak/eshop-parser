@@ -100,7 +100,6 @@
                                class="block-center form-control form-control-dark w-100" type="text"
                                placeholder="Search"
                                aria-label="Search"
-                               onkeyup="if(event.keyCode == 13) find()"
                         />
                     </ul>
 
@@ -127,7 +126,7 @@
             <h2>Products</h2>
         </div>
         <div class="line"></div>
-        <div th:each="product : ${products}">
+        <div id="scroll-content" th:each="product : ${products}">
             <div th:object="${product}">
                 <img class="img-responsive img-thumbnail img-limited"
                      th:src="'https://www.eobaly.cz/'+ *{imgUrl}"
@@ -146,7 +145,7 @@
 <!-- Custom Scroller Js CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 <script th:src="@{/js/template.js}" src="../static/js/template.js"></script>
-<script th:src="@{/js/common.js}" src="../static/js/common.js"></script>
+<script th:src="@{/js/home.js}" src="../static/js/home.js"></script>
 </body>
 </html>
 
