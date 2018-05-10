@@ -37,14 +37,18 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th scope="col">Data</th>
+                        <th scope="col">Url</th>
                         <th scope="col">Type</th>
+                        <th scope="col">Message</th>
+                        <th scope="col">StackTrace</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="log : ${errorLogs}" scope="row">
-                        <td th:text="${log.data}">data</td>
+                        <td th:text="${log.url}">url</td>
                         <td th:text="${log.type}">type</td>
+                        <td th:text="${log.message}">message</td>
+                        <td th:text="${log.stackTrace}">stackTrace</td>
                     </tr>
                     </tbody>
                 </table>

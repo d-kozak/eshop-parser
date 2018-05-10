@@ -13,6 +13,10 @@ class ErrorLog {
 
     var type = ""
 
-    var data = ""
+    var url = ""
+
+    var message = ""
+
+    var stackTrace = ""
 
 }

@@ -4,13 +4,16 @@ package io.dkozak.eobaly.service
 import com.gargoylesoftware.htmlunit.WebClient
 import com.gargoylesoftware.htmlunit.html.DomNode
 import com.gargoylesoftware.htmlunit.html.HtmlPage
+import io.dkozak.eobaly.dao.ErrorLogRepository
 import io.dkozak.eobaly.dao.ProductCategoryRepository
 import io.dkozak.eobaly.dao.ProductDetailsRepository
 import io.dkozak.eobaly.dao.ProductRepository
+import io.dkozak.eobaly.domain.ErrorLog
 import io.dkozak.eobaly.domain.Product
 import io.dkozak.eobaly.domain.ProductCategory
 import io.dkozak.eobaly.domain.ProductDetails
 import io.dkozak.eobaly.tasks.EobalyParsingTask
+import io.dkozak.eobaly.utils.stackTraceAsString
 import org.jboss.logging.Logger
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -26,7 +29,8 @@ val MAIN_URL = "https://www.eobaly.cz"
 class ParseShopService(
         private val productRepository: ProductRepository,
         private val productDetailsRepository: ProductDetailsRepository,
-        private val productCategoryRepository: ProductCategoryRepository
+        private val productCategoryRepository: ProductCategoryRepository,
+        private val errorLogRepository: ErrorLogRepository
 ) {
 
     private val log = Logger.getLogger(EobalyParsingTask::class.java)
@@ -37,9 +41,8 @@ class ParseShopService(
                     .filter { it.contains("/produkty/") }
                     .toList()
 
-    fun parseCategoryPage(url: String, productRepository: ProductRepository): Pair<List<String>, List<String>> {
+    fun parseCategoryPage(url: String, productRepository: ProductRepository): List<String> {
         val result = mutableListOf<String>()
-        val failedLinks = mutableListOf<String>()
         val fullUrl = if (!url.startsWith(MAIN_URL)) MAIN_URL + url else url
 
         System.getProperties().put("org.apache.commons.logging.simplelog.defaultlog", "error")
@@ -68,12 +71,17 @@ class ParseShopService(
                             }.toList())
 
                 } catch (ex: Exception) {
-                    failedLinks.add(nextUrl)
                     ex.printStackTrace()
                     log.warn("Could not parse link $nextUrl, because ${ex.message}")
+                    val log = ErrorLog()
+                    log.type = "PRODUCT_PAGE_FAIL"
+                    log.message = ex.message ?: ""
+                    log.url = nextUrl
+                    log.stackTrace = ex.stackTraceAsString()
+                    errorLogRepository.save(log)
                 }
             }
-            return result to failedLinks
+            return result
         }
     }
 

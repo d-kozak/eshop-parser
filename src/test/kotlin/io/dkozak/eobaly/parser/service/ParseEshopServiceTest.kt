@@ -25,6 +25,8 @@ class ParseEshopServiceTest {
 
     private lateinit var eobalyParsingTask: EobalyParsingTask
 
+    private lateinit var parseEshopService: ParseShopService
+
     @Mock
     lateinit var productRepository: ProductRepository
 
@@ -39,12 +41,19 @@ class ParseEshopServiceTest {
 
     @Before
     fun init() {
-        val parseEshopService = ParseShopService(productRepository, productDetailsRepository, productCategoryRepository)
+        parseEshopService = ParseShopService(productRepository, productDetailsRepository, productCategoryRepository, errorLogRepository)
         eobalyParsingTask = EobalyParsingTask(parseEshopService, productRepository, errorLogRepository)
     }
 
     @Test
     fun startParseTaskTest() {
         eobalyParsingTask.start()
+    }
+
+    @Test
+    fun parseProduct() {
+        val product = parseEshopService.parseProduct("https://www.eobaly.cz/papirova-civka-tvvysek-485x485x362-5vvl-vlna-bc.htm");
+
+        println(product)
     }
 }

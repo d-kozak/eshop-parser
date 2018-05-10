@@ -30,7 +30,7 @@ CREATE TABLE `hibernate_sequence` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `hibernate_sequence`
+-- Dumping url for table `hibernate_sequence`
 --
 
 LOCK TABLES `hibernate_sequence` WRITE;
@@ -62,7 +62,7 @@ CREATE TABLE `product` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `product`
+-- Dumping url for table `product`
 --
 
 LOCK TABLES `product` WRITE;
@@ -1016,7 +1016,7 @@ CREATE TABLE `product_category` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `product_category`
+-- Dumping url for table `product_category`
 --
 
 LOCK TABLES `product_category` WRITE;
@@ -1058,7 +1058,7 @@ CREATE TABLE `product_details` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `product_details`
+-- Dumping url for table `product_details`
 --
 
 LOCK TABLES `product_details` WRITE;
@@ -1547,7 +1547,7 @@ CREATE TABLE `product_details_amount_details` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `product_details_amount_details`
+-- Dumping url for table `product_details_amount_details`
 --
 
 LOCK TABLES `product_details_amount_details` WRITE;
@@ -1733,7 +1733,7 @@ CREATE TABLE `product_details_price_details` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `product_details_price_details`
+-- Dumping url for table `product_details_price_details`
 --
 
 LOCK TABLES `product_details_price_details` WRITE;

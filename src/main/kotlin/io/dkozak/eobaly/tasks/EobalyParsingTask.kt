@@ -5,7 +5,9 @@ import io.dkozak.eobaly.dao.ProductRepository
 import io.dkozak.eobaly.domain.ErrorLog
 import io.dkozak.eobaly.domain.ProductCategory
 import io.dkozak.eobaly.service.ParseShopService
+import io.dkozak.eobaly.utils.stackTraceAsString
 import org.jboss.logging.Logger
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.util.concurrent.CompletableFuture
 
@@ -18,7 +20,7 @@ class EobalyParsingTask(
 
     private val log = Logger.getLogger(EobalyParsingTask::class.java)
 
-    //    @Scheduled(initialDelay = 1000, fixedDelay = 1000 * 60 * 60)
+    @Scheduled(initialDelay = 1000, fixedDelay = 1000 * 60 * 60)
     fun start() {
         log.info("Starting")
         val categoriesUrl = parseEshopService.parseMainPage()
@@ -28,41 +30,36 @@ class EobalyParsingTask(
 
             CompletableFuture.supplyAsync {
                 parseCategory(productCategory, categoryUrl)
+            }.exceptionally {
+                val log = ErrorLog()
+                log.type = "WHOLE_CATEGORY_ERROR"
+                log.url = categoryUrl
+                log.message = it.message ?: ""
+                log.stackTrace = it.stackTraceAsString()
+
+                errorLogRepository.save(log)
             }
         }
-
+        log.info("Finished")
     }
 
     private fun parseCategory(productCategory: ProductCategory, categoryUrl: String) {
         log.info("${productCategory.name} started")
-        val (loadedProductUrls, failedCategoryPages) = parseEshopService.parseCategoryPage(categoryUrl, productRepository)
+        val loadedProductUrls = parseEshopService.parseCategoryPage(categoryUrl, productRepository)
         for (url in loadedProductUrls) {
-            val failedProductUrls = mutableListOf<String>()
             try {
                 log.info("parsing $url")
                 parseEshopService.parseProduct(url, productCategory)
             } catch (ex: Exception) {
                 log.warn("Could not parse $url, because ${ex.message}")
                 ex.printStackTrace()
-                failedProductUrls += url
-            } finally {
-                failedProductUrls.map {
-                    val errorLog = ErrorLog()
-                    errorLog.type = "PRODUCT_PARSE_FAIL"
-                    errorLog.data = it
-                    errorLog
-                }.forEach {
-                    errorLogRepository.save(it)
-                }
+                val log = ErrorLog()
+                log.url = url;
+                log.message = ex.message ?: ""
+                log.type = "PRODUCT_PAGE_FAIL"
+                log.stackTrace = ex.stackTraceAsString()
+                errorLogRepository.save(log)
             }
-        }
-        failedCategoryPages.map {
-            val errorLog = ErrorLog()
-            errorLog.type = "CATEGORY_PAGE_FAIL"
-            errorLog.data = it
-            errorLog
-        }.forEach {
-            errorLogRepository.save(it)
         }
         log.info("${productCategory.name} finished")
     }
