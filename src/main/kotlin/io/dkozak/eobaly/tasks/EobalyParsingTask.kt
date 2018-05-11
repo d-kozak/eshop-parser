@@ -43,7 +43,7 @@ class EobalyParsingTask(
         try {
             executionId = productLogRepository.findNextExecutionId() ?: 0
             val categoriesUrl = parseEshopService.parseMainPage()
-                    .map { if (it.startsWith(MAIN_URL)) MAIN_URL + it else it }
+                    .map { if (!it.startsWith(MAIN_URL)) MAIN_URL + it else it }
             log.info("Found ${categoriesUrl.size} categories : $categoriesUrl")
             for (categoryUrl in categoriesUrl) {
                 val productCategory = parseEshopService.getProductCategory(categoryUrl, executionId)

@@ -101,20 +101,27 @@ class ParseEshopService(
         val noProductsAvailable = productCount.isBlank()
         if (noProductsAvailable)
             productCount = "0"
-        val priceDetails = doc.select(".table-pricing tr")
-                .map { it.select("td") }
-                .map { it.toList() }
-                .filter { it.isNotEmpty() }
-                .map {
-                    val amount = it[0]
-                            .text()
-                    val thirdPart = it[2].text()
-                    val pricePerItem = parseNum(thirdPart
-                            .replace(",", ".")
-                            .replace(" ", "")).toString()
-                    amount to pricePerItem
-                }
-                .toMutableList()
+        var priceDetails: MutableList<Pair<String, String>>
+        try {
+            priceDetails = doc.select(".table-pricing tr")
+                    .map { it.select("td") }
+                    .map { it.toList() }
+                    .filter { it.isNotEmpty() }
+                    .map {
+                        val amount = it[0]
+                                .text()
+                        val thirdPart = it[2].text()
+                        val pricePerItem = parseNum(thirdPart
+                                .replace(",", ".")
+                                .replace(" ", "")).toString()
+                        amount to pricePerItem
+                    }
+                    .toMutableList()
+            if (priceDetails.isEmpty())
+                priceDetails.add("0" to "0")
+        } catch (exception: Exception) {
+            priceDetails = mutableListOf("0" to "0")
+        }
 
         val imgUrl = doc.select(".thickbox img")
                 .attr("src")
