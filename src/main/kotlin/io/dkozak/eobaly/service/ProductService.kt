@@ -22,7 +22,7 @@ class ProductService(
         val product = productRepository.findByInternalName(productUrl)
                 ?: throw RuntimeException("invalid internal name")
         val details = product.details.map {
-            ProductDetailView(it.timestamp, parseNum(it.priceDetails), parseNum(it.amountDetails).toLong())
+            ProductDetailView(it.timestamp, parseNum(it.priceDetails), it.productCount.toLong())
         }
         return ProductDetailsView(details)
     }

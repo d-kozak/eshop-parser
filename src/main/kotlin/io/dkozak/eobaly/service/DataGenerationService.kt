@@ -31,6 +31,7 @@ class DataGenerationService(
                 productDetails.product = it
                 currentDay = removeOneDay(currentDay, productDetails)
                 productDetails.timestamp = currentDay
+                productDetails.amount = amount.toString()
                 productDetails.amountDetails = mutableListOf(amount.toString())
                 productDetails.priceDetails = mutableListOf(price.toString())
                 it.details.add(productDetailsRepository.save(productDetails))

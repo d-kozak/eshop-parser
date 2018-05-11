@@ -93,11 +93,14 @@ class ParseEshopService(
         val internalName = parseNameFromUrl(url)
         val doc = Jsoup.connect(if (!url.startsWith(MAIN_URL)) MAIN_URL + url else url).get()
         val externalName = doc.select(".col-2 h1").text()
-        val productCount = doc.select(".table-spec .text-hi")
+        var productCount = doc.select(".table-spec .text-hi")
                 .text()
                 .replace(" ks", "")
                 .replace(" ", "")
                 .trim()
+        val noProductsAvailable = productCount.isBlank()
+        if (noProductsAvailable)
+            productCount = "0"
         val priceDetails = doc.select(".table-pricing tr")
                 .map { it.select("td") }
                 .map { it.toList() }
