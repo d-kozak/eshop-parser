@@ -109,9 +109,9 @@ class ParseEshopService(
                     val amount = it[0]
                             .text()
                     val thirdPart = it[2].text()
-                    val pricePerItem = thirdPart
-                            .substring(0, thirdPart.indexOf(' '))
+                    val pricePerItem = parseNum(thirdPart
                             .replace(",", ".")
+                            .replace(" ", "")).toString()
                     amount to pricePerItem
                 }
                 .toMutableList()

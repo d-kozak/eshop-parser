@@ -46,7 +46,7 @@ fun parseNum(priceDetails: List<String>): Double =
             parseNum(it)
         }.average()
 
-private fun parseNum(it: String): Double {
+fun parseNum(it: String): Double {
     return """\d+(\.\d+)?""".toRegex()
             .find(it)
             ?.groups
