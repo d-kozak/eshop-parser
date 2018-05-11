@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull
 
 @Volatile
 var UNKNOWN_CATEGORY = ProductCategory().let {
-    it.name = "UNKOWN"
+    it.name = "UNKNOWN"
     it.url = "NONE"
     it
 }

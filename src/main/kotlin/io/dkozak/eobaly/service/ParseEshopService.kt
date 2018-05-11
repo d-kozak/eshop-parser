@@ -89,7 +89,7 @@ class ParseEshopService(
 
     private fun parseProductBox(element: Element): String = element.select("a").attr("href")
 
-    fun parseProduct(url: String): Product {
+    fun parseProduct(url: String): Pair<Product, String> {
         val internalName = parseNameFromUrl(url)
         val doc = Jsoup.connect(if (!url.startsWith(MAIN_URL)) MAIN_URL + url else url).get()
         val externalName = doc.select(".col-2 h1").text()
@@ -116,6 +116,8 @@ class ParseEshopService(
         val imgUrl = doc.select(".thickbox img")
                 .attr("src")
 
+        val categoryUrl = doc.select(".mainmenu .sel a").attr("href")
+
         val productDetails = ProductDetails()
         productDetails.productCount = productCount
         productDetails.amountDetails = mutableListOf(priceDetails[0].first)
@@ -126,11 +128,11 @@ class ParseEshopService(
         product.externalName = externalName
         product.url = url
         product.imgUrl = imgUrl
-        return product
+        return product to categoryUrl
     }
 
     fun parseProduct(url: String, productCategory: ProductCategory): Product {
-        val parsedProduct = parseProduct(url)
+        val (parsedProduct, _) = parseProduct(url)
         var productInDb = productRepository.findByInternalName(parsedProduct.internalName)
         if (productInDb == null) {
             parsedProduct.category = productCategory

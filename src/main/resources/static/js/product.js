@@ -17,12 +17,19 @@ function renderGraph(internalName) {
         .then(
             response => {
                 console.log(response);
-                const trace = {
+                const priceTrace = {
                     x: response.details.map(it => it.timestamp),
                     y: response.details.map(it => it.prize),
-                    type: 'scatter'
+                    type: 'scatter',
+                    name: 'Price'
                 };
-                const data = [trace];
+                const amountTrace = {
+                    x: response.details.map(it => it.timestamp),
+                    y: response.details.map(it => it.amount),
+                    type: 'scatter',
+                    name: 'Amount'
+                };
+                const data = [priceTrace, amountTrace];
                 Plotly.newPlot('chart', data);
                 console.log('chart loaded...');
 

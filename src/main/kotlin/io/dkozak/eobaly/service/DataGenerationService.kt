@@ -18,13 +18,15 @@ class DataGenerationService(
     fun generatePriceForAll() {
         val random = Random()
         productRepository.findAll().map {
-            val oldedestDetails = if (it.details.size > 0) it.details[0] else null
-            var price = if (oldedestDetails != null) parseNum(oldedestDetails.priceDetails) else random.nextInt() * 200.0
-            val amount = if (oldedestDetails != null) parseNum(oldedestDetails.amountDetails) else random.nextInt() * 20.0
-            var currentDay = if (oldedestDetails != null) oldedestDetails.timestamp else Date()
+            val oldestDetails = if (it.details.size > 0) it.details[0] else null
+            var price = if (oldestDetails != null) parseNum(oldestDetails.priceDetails) else random.nextInt() * 200.0
+            var amount = if (oldestDetails != null) parseNum(oldestDetails.amountDetails) else random.nextInt() * 20.0
+            var currentDay = if (oldestDetails != null) oldestDetails.timestamp else Date()
             for (i in 1..10) {
-                val deviation = 0.1 * price
-                price = if (random.nextBoolean()) price + deviation else price - deviation
+                val priceDeviation = 0.1 * price
+                val amountDeviation = 0.1 * price
+                price = if (random.nextBoolean()) price + priceDeviation else price - priceDeviation
+                amount = if (random.nextBoolean()) amount + amountDeviation else amount - amountDeviation
                 val productDetails = ProductDetails()
                 productDetails.product = it
                 currentDay = removeOneDay(currentDay, productDetails)

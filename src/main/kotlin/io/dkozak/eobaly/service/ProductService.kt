@@ -6,7 +6,6 @@ import io.dkozak.eobaly.dao.ProductRepository
 import io.dkozak.eobaly.domain.Product
 import io.dkozak.eobaly.domain.ProductDetailView
 import io.dkozak.eobaly.domain.ProductDetailsView
-import io.dkozak.eobaly.domain.UNKNOWN_CATEGORY
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -29,8 +28,8 @@ class ProductService(
     }
 
     fun parseProduct(url: String): Product {
-        val product = parseEshopService.parseProduct(url)
-        product.category = UNKNOWN_CATEGORY
+        val (product, categoryUrl) = parseEshopService.parseProduct(url)
+        product.category = parseEshopService.getProductCategory(categoryUrl)
         for (detail in product.details) {
             detail.product = product
             productDetailsRepository.save(detail)

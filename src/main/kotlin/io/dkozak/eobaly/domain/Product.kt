@@ -6,8 +6,8 @@ import javax.validation.constraints.NotNull
 @Volatile
 var UNKOWN_PRODUCT = Product().let {
     it.category = UNKNOWN_CATEGORY
-    it.externalName = "UNKOWN"
-    it.internalName = "UNKOWN"
+    it.externalName = "UNKNOWN"
+    it.internalName = "UNKNOWN"
     it.url = "pool/vzor/products/clim_thumb_xxl_103841_1.jpg"
     it
 }

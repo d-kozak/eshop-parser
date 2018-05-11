@@ -74,7 +74,7 @@ class EobalyParsingTask(
     fun startFor(internalName: String) {
         CompletableFuture.supplyAsync {
             val url = "https://www.eobaly.cz/${internalName}.htm"
-            val parsedProduct = parseEshopService.parseProduct(url)
+            val (parsedProduct, _) = parseEshopService.parseProduct(url)
             productRepository.save(parsedProduct)
         }
     }
