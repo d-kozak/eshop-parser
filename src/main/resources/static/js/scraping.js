@@ -50,6 +50,10 @@ function parseProduct(url) {
         response => {
             console.log('Loaded', response);
             alert('Loaded product ' + response.externalName);
+            const link = document.createElement('a');
+            link.href = '/product/' + response.internalName;
+            link.innerText = response.externalName;
+            parseProductForm.appendChild(link);
         }
     ).catch(
         reason => {

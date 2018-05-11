@@ -22,28 +22,35 @@ class ProductService(
         val product = productRepository.findByInternalName(productUrl)
                 ?: throw RuntimeException("invalid internal name")
         val details = product.details.map {
-            ProductDetailView(it.timestamp, parseNum(it.priceDetails), it.productCount.toLong())
+            ProductDetailView(it.timestamp, parseNum(it.priceDetails), parseNum(it.productCount).toLong())
         }
         return ProductDetailsView(details)
     }
 
     fun parseProduct(url: String): Product {
         val (product, categoryUrl) = parseEshopService.parseProduct(url)
-        product.category = parseEshopService.getProductCategory(categoryUrl)
+        val productInDtb = productRepository.findByInternalName(product.internalName)
+        if (productInDtb == null) {
+            product.category = parseEshopService.getProductCategory(categoryUrl)
+        }
         for (detail in product.details) {
-            detail.product = product
+            detail.product = if (productInDtb != null) productInDtb else product
             productDetailsRepository.save(detail)
         }
-        return productRepository.save(product)
+        return productRepository.save(if (productInDtb != null) productInDtb else product)
     }
 }
 
 fun parseNum(priceDetails: List<String>): Double =
         priceDetails.map {
-            """\d+(\.\d+)?""".toRegex()
-                    .find(it)
-                    ?.groups
-                    ?.get(0)
-                    ?.value
-                    ?.toDouble() ?: 0.0
+            parseNum(it)
         }.average()
+
+private fun parseNum(it: String): Double {
+    return """\d+(\.\d+)?""".toRegex()
+            .find(it)
+            ?.groups
+            ?.get(0)
+            ?.value
+            ?.toDouble() ?: 0.0
+}
