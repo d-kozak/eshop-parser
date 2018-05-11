@@ -12,6 +12,7 @@ class GlobalDefaultExceptionHandler {
 
     @ExceptionHandler(value = [(Exception::class)])
     fun error(model: Model, request: HttpServletRequest, exception: Exception): String {
+        exception.printStackTrace()
 
         model["exception"] = exception
         model["url"] = request.requestURL

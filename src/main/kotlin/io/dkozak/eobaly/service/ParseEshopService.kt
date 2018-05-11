@@ -36,7 +36,7 @@ class ParseEshopService(
                     .filter { it.contains("/produkty/") }
                     .toList()
 
-    fun parseCategoryPage(url: String, productRepository: ProductRepository): List<String> {
+    fun parseCategoryPage(url: String, productRepository: ProductRepository, executionId: Long): List<String> {
         val result = mutableListOf<String>()
         val fullUrl = if (!url.startsWith(MAIN_URL)) MAIN_URL + url else url
 
@@ -54,7 +54,7 @@ class ParseEshopService(
                         .textContent
                         .toInt()
             } else 1
-            productLogRepository.save(ProductLog(url = fullUrl, state = "SUCCESS"))
+            productLogRepository.save(ProductLog(url = fullUrl, state = "SUCCESS", executionId = executionId))
             productLogRepository.flush()
             for (i in 1..maxPageNumber) {
                 val nextUrl = "$fullUrl?page=$i"
@@ -67,7 +67,7 @@ class ParseEshopService(
                                         .getNamedItem("href")
                                         .nodeValue
                             }.toList())
-                    productLogRepository.save(ProductLog(url = nextUrl, state = "SUCCESS"))
+                    productLogRepository.save(ProductLog(url = nextUrl, state = "SUCCESS", executionId = executionId))
                     productLogRepository.flush()
 
                 } catch (ex: Exception) {
@@ -79,7 +79,7 @@ class ParseEshopService(
                     log.url = nextUrl
                     log.stackTrace = ex.stackTraceAsString()
                     errorLogRepository.save(log)
-                    productLogRepository.save(ProductLog(url = nextUrl, state = "FAILURE"))
+                    productLogRepository.save(ProductLog(url = nextUrl, state = "FAILURE", executionId = executionId))
                     productLogRepository.flush()
                 }
             }
@@ -150,13 +150,14 @@ class ParseEshopService(
         return productInDb
     }
 
-    fun getProductCategory(categoryUrl: String): ProductCategory {
+    fun getProductCategory(categoryUrl: String, executionId: Long = -1): ProductCategory {
         var productCategory = productCategoryRepository.findByUrl(categoryUrl)
         if (productCategory == null) {
             productCategory = ProductCategory()
             productCategory.name = parseNameFromUrl(categoryUrl)
             productCategory.url = categoryUrl
             productCategoryRepository.save(productCategory)
+            productLogRepository.save(ProductLog(url = categoryUrl, state = "SUCCESS", executionId = executionId))
         }
         return productCategory
     }

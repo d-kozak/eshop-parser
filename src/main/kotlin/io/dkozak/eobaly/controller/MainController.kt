@@ -2,8 +2,8 @@ package io.dkozak.eobaly.controller
 
 import io.dkozak.eobaly.dao.ErrorLogRepository
 import io.dkozak.eobaly.dao.ProductCategoryRepository
+import io.dkozak.eobaly.dao.ProductLogRepository
 import io.dkozak.eobaly.dao.ProductRepository
-import io.dkozak.eobaly.tasks.EobalyParsingTask
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam
 class MainController(
         private val productCategoryRepository: ProductCategoryRepository,
         private val productRepository: ProductRepository,
-        private val errorLogRepository: ErrorLogRepository,
-        private val eobalyParsingTask: EobalyParsingTask
+        private val productLogRepository: ProductLogRepository,
+        private val errorLogRepository: ErrorLogRepository
 ) {
 
     @GetMapping("/")
@@ -43,11 +43,13 @@ class MainController(
         return "product.html"
     }
 
-    @GetMapping("/error-log")
+    @GetMapping("/log")
     fun errorLog(model: Model): String {
         model["errorLogs"] = errorLogRepository.findAll()
         model["productCategories"] = productCategoryRepository.findAll()
-        return "error-log.html"
+        model["logGroups"] = productLogRepository.findAll().groupBy { it.executionId }
+
+        return "log.html"
     }
 
     @GetMapping("/about")

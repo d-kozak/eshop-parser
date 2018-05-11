@@ -19,7 +19,7 @@ Setup
     
 ## Known issues
 * parsing single product does not persist the product with all dependencies
-* parsing fails for a couple of products - see error log
+* parsing fails for a couple of products - see Log
 * no pagination
 * cannot limit number of threads to use for the parsing
 * problems with Czech encoding     

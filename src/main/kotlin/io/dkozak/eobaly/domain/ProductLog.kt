@@ -11,6 +11,7 @@ data class ProductLog(
         val id: Long = 0,
         val url: String = "",
         val state: String = "",
-        var alreadyChecked: Boolean = false
+        var alreadyChecked: Boolean = false,
+        val executionId: Long = -1
 
 )

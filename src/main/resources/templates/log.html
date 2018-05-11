@@ -58,9 +58,9 @@
                 </a>
             </li>
             <li>
-                <a th:href="@{/error-log}" href="#">
+                <a th:href="@{/log}" href="#">
                     <i class="glyphicon glyphicon-link"></i>
-                    <span>Error log</span>
+                    <span>Log</span>
                 </a>
             </li>
             <li>
@@ -111,8 +111,17 @@
             </div>
         </nav>
 
-        <div>
-            <h2>Error logs</h2>
+        <ul id="tabs" class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Error log</a>
+            </li>
+            <li class="nav-item" th:each="id : ${logGroups.keySet()}">
+                <a class="nav-link" href="#" th:text="${id}">Link</a>
+            </li>
+        </ul>
+
+        <div id="error-log" style="display:none;">
+            <h2>Error log</h2>
             <div class="line"></div>
             <table class="table table-striped">
                 <thead>
@@ -125,13 +134,33 @@
                 </thead>
                 <tbody>
                 <tr th:each="log : ${errorLogs}" scope="row">
-                    <td th:text="${log.url}">url</td>
+                    <td><a th:href="${log.url}" th:text="${log.url}"></a></td>
                     <td th:text="${log.type}">type</td>
                     <td th:text="${log.message}">message</td>
                     <td th:text="${log.stackTrace}">stackTrace</td>
                 </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div th:each="key : ${logGroups.keySet()}">
+            <div th:id="${key}" style="display:none;">
+                <h2 th:text="'Execution id: ' + ${key}">name</h2>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Url</th>
+                        <th scope="col">State</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="log : ${logGroups.get(key)}" scope="row">
+                        <td><a th:href="${log.url}" th:text="${log.url}"></a></td>
+                        <td th:text="${log.state}">state</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="line"></div>
@@ -146,5 +175,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 <script th:src="@{/js/template.js}" src="../static/js/template.js"></script>
 <script th:src="@{/js/common.js}" src="../static/js/common.js"></script>
+<script th:src="@{/js/log.js}" src="../static/js/log.js"></script>
 </body>
 </html>
