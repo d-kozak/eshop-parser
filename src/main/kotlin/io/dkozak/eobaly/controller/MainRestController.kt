@@ -44,7 +44,9 @@ class MainRestController
         val productCategory = parseEshopService.getProductCategory(url)
         CompletableFuture.supplyAsync {
             eobalyParsingTask.parseCategory(productCategory, url)
-        }
+        }.thenAccept({
+            productLogService.save(ProductLog(url = "/", state = "DONE"))
+        })
         return "\"ok\""
     }
 

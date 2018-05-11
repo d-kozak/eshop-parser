@@ -136,7 +136,13 @@ function loadLogs() {
                     tableRow.innerHTML = line;
                     return tableRow;
                 }).forEach(tableRow => tableBody.appendChild(tableRow));
-            setTimeout(loadLogs, 2000);
+            const isDone = response.reduce((acc, elem) => acc || (elem.state === 'DONE'), false);
+            if (isDone) {
+                document.getElementById('modalDialogLabel').innerText += '... DONE!';
+                alert('DONE');
+            } else {
+                setTimeout(loadLogs, 2000);
+            }
         }
     ).catch(reason => console.log(reason));
 

@@ -37,15 +37,18 @@ class EobalyParsingTask(
             }
             running = true
         }
+        var executionId = 0L
+        var allFutures = CompletableFuture<Void>()
+        allFutures.complete(null)
         try {
-            val executionId = productLogRepository.findNextExecutionId() ?: 0
+            executionId = productLogRepository.findNextExecutionId() ?: 0
             val categoriesUrl = parseEshopService.parseMainPage()
                     .map { if (it.startsWith(MAIN_URL)) MAIN_URL + it else it }
             log.info("Found ${categoriesUrl.size} categories : $categoriesUrl")
             for (categoryUrl in categoriesUrl) {
                 val productCategory = parseEshopService.getProductCategory(categoryUrl, executionId)
 
-                CompletableFuture.supplyAsync {
+                allFutures = CompletableFuture.allOf(allFutures, CompletableFuture.supplyAsync {
                     parseCategory(productCategory, categoryUrl, executionId)
                 }.exceptionally {
                     val log = ErrorLog()
@@ -55,13 +58,25 @@ class EobalyParsingTask(
                     log.stackTrace = it.stackTraceAsString()
 
                     errorLogRepository.save(log)
-                }
+                })
             }
         } finally {
-            synchronized(lock) {
-                running = false
+            allFutures.thenAccept {
+                synchronized(lock) {
+                    running = false
+                }
+                log.info("Finished")
+                productLogRepository.save(ProductLog(url = "/", state = "DONE", executionId = executionId))
+            }.exceptionally {
+                synchronized(lock) {
+                    running = false
+                }
+                log.info("Failed")
+                productLogRepository.save(ProductLog(url = "/", state = "DONE", executionId = executionId))
+                null
+
             }
-            log.info("Finished")
+
         }
     }
 

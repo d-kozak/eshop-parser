@@ -20,5 +20,7 @@ class ProductLogService(
     }
 
     fun findAll() = productLogRepository.findAll()
+
+    fun save(productLog: ProductLog) = productLogRepository.save(productLog)
 }
 
