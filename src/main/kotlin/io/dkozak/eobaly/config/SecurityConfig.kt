@@ -35,8 +35,8 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(auth: AuthenticationManagerBuilder) {
         auth
                 .inMemoryAuthentication()
-                .withUser("user")
-                .password(encoder().encode("user"))
+                .withUser("eobaly")
+                .password(encoder().encode("mesiczememars"))
                 .roles("USER")
     }
 }
