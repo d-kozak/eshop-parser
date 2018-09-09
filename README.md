@@ -1,6 +1,5 @@
 # EOBALY web crawler
 
-PDS Proj 2018
 Spring boot web application which parses eshop data, and then visualizes the amount and price of the items over time.
 The front end is created using [Thymeleaf](https://www.thymeleaf.org/). 
 
