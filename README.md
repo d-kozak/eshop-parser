@@ -1,17 +1,19 @@
 # EOBALY web crawler
 
 PDS Proj 2018
+Spring boot web application which parses eshop data, and then visualizes the amount and price of the items over time.
+The front end is created using [Thymeleaf](https://www.thymeleaf.org/). 
 
-author: David Kozak
+Author: David Kozak
 
-contact: dkozak94@gmail.com
+Contact: dkozak94@gmail.com
 
-Dependencies:
+## Dependencies:
 * java 8 runtime
 * maven
 * mysql database
 
-Setup
+## Setup
 1) provide credentials to access database in /src/main/resources/application.properties
 2) run with mvn  spring-boot:run
 3) open your browser and go to localhost:8080
